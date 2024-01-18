@@ -9,13 +9,13 @@ import Connection from '../../interfaces/Connection';
 import useConnectionStatusStore from '../store/useConnectionStatusStore';
 
 const Settings: NextPage = () => {
-  const connections = useDbConnectionsStore((s) => s.connections)
-  const deleteConnection = useDbConnectionsStore((s) => s.deleteConnection)
-  const setAsConnected = useConnectionStatusStore((s) => s.setAsConnected)
+  const connections = useDbConnectionsStore(s => s.connections)
+  const deleteConnection = useDbConnectionsStore(s => s.deleteConnection)
+  const setAsConnected = useConnectionStatusStore(s => s.setAsConnected)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [editConnectionItem, setEditConnectionItem] = useState<Connection | undefined>(undefined)
-  const database = useConnectionStatusStore((s) => s.database)
-  const setAsDisconnected = useConnectionStatusStore((s) => s.setAsDisconnected)
+  const database = useConnectionStatusStore(s => s.database)
+  const setAsDisconnected = useConnectionStatusStore(s => s.setAsDisconnected)
 
   const onEditClick = (connection: Connection) => {
     setEditConnectionItem(connection)

@@ -15,14 +15,14 @@ import useConnectionStatusStore from '../store/useConnectionStatusStore';
 const TrackPage: NextPage = () => {
   const [isStart, setIsStart] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const results = useTrackStore((s) => s.results)
-  const selectedResultId = useTrackStore((s) => s.selectedResultId)
-  const selectedTable = useTrackStore((s) => s.selectedTable)
-  const setResult = useTrackStore((s) => s.setResult)
-  const setSelectedResultId = useTrackStore((s) => s.setSelectedResultId)
-  const setSelectedTable = useTrackStore((s) => s.setSelectedTable)
-  const clearResults = useTrackStore((s) => s.clearResults)
-  const connectionStatus = useConnectionStatusStore((s) => s.connectionStatus)
+  const results = useTrackStore(s => s.results)
+  const selectedResultId = useTrackStore(s => s.selectedResultId)
+  const selectedTable = useTrackStore(s => s.selectedTable)
+  const setResult = useTrackStore(s => s.setResult)
+  const setSelectedResultId = useTrackStore(s => s.setSelectedResultId)
+  const setSelectedTable = useTrackStore(s => s.setSelectedTable)
+  const clearResults = useTrackStore(s => s.clearResults)
+  const connectionStatus = useConnectionStatusStore(s => s.connectionStatus)
 
   useEffect(() => {
     const removeTrackListener = window.ipc.on('track', args => {

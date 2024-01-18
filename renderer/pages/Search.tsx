@@ -1,30 +1,34 @@
 import {
   Box,
   Flex,
-  Input,
-  Text
+  Input
 } from '@chakra-ui/react'
 import { NextPage } from 'next';
 import { Resplit } from 'react-resplit';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CenterTable from '../components/CenterTable';
 import TablesList from '../components/TablesList';
 import Splitter from '../components/Splitter';
 import MainContainer from '../components/MainContainer';
-import DynamicDatabaseData from '../../interfaces/DynamicDatabaseData';
 import useConnectionStatusStore from '../store/useConnectionStatusStore';
 import ConnectionIndicator from '../components/ConnectionIndicator';
+import SearchResult from '../../interfaces/SearchResult';
+import useForeignKeyStore from '../store/useForeignKeyStore';
+import useDbDataStore from '../store/useDbDataStore';
 
 const SearchPage: NextPage = () => {
-  const connectionStatus = useConnectionStatusStore((s) => s.connectionStatus)
-  const [searchResults, setSearchResults] = useState<DynamicDatabaseData | undefined>(undefined)
+  const connectionStatus = useConnectionStatusStore(s => s.connectionStatus)
   const [seachValue, setSeachValue] = useState('')
-  const [selectedTable, setSelectedTable] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const setForeignKeyDetails = useForeignKeyStore(s => s.setForeignKeyDetails)
+  const setDbData = useDbDataStore((s) => s.setDbData)
 
   useEffect(() => {
     const removeTrackListener = window.ipc.on('search', args => {
-      setSearchResults(args as DynamicDatabaseData)
+      const { foreignKeyDetails, data } = args as SearchResult
+
+      setDbData(data)
+      setForeignKeyDetails(foreignKeyDetails)
       setIsLoading(false)
     });
 
@@ -39,14 +43,6 @@ const SearchPage: NextPage = () => {
     setIsLoading(true)
     window.ipc.send('search', seachValue)
   }, [isLoading]);
-
-  const tableData = useMemo(() => {
-    return selectedTable
-      ? Object.keys(searchResults)
-        .filter(s => s === selectedTable)
-        .map(s => searchResults[s]).flat()
-      : [];
-  }, [selectedTable, searchResults]);
 
   return (
     <MainContainer>
@@ -72,14 +68,8 @@ const SearchPage: NextPage = () => {
               />
             </Box>
 
-            {
-              searchResults &&
-              <TablesList
-                items={Object.keys(searchResults)}
-                selected={selectedTable}
-                setSelected={setSelectedTable}
-              />
-            }
+            <TablesList />
+
           </Flex>
         </Resplit.Pane>
 
@@ -87,10 +77,7 @@ const SearchPage: NextPage = () => {
 
         <Resplit.Pane order={2} initialSize="0.8fr">
           <Flex h="100vh">
-            {
-              tableData.length > 0 &&
-              <CenterTable tableData={tableData} />
-            }
+            <CenterTable />
           </Flex>
         </Resplit.Pane>
 

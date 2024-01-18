@@ -1,19 +1,19 @@
 import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, ResponsiveValue, useDisclosure } from "@chakra-ui/react";
-import { useState, memo } from "react";
+import { useState } from "react";
 import { format } from 'date-fns';
 import isBufferObject from "../utils/isBufferObject";
 import convertBufferObjectToHexString from "../utils/convertBufferObjectToHexString";
 import isJson from "../utils/isJson";
 import JsonModal from "./JsonModal";
+import useForeignKeyStore from "../store/useForeignKeyStore";
+import useDbDataStore from "../store/useDbDataStore";
 
-interface Props {
-  tableData: any[];
-}
-
-const CenterTable = ({ tableData }: Props) => {
-  const columns = Object.keys(tableData[0])
+const CenterTable = () => {
   const [jsonString, setJsonString] = useState("")
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const foreignKeyDetails = useForeignKeyStore(s => s.foreignKeyDetails)
+  const columnNames = useDbDataStore(s => s.columnNames)
+  const tableData = useDbDataStore(s => s.tableData)
 
   return (
     <>
@@ -22,7 +22,7 @@ const CenterTable = ({ tableData }: Props) => {
           <Thead position="sticky" top={0} zIndex="docked">
 
             <Tr>
-              {columns.map((column) => {
+              {columnNames.map((column) => {
                 return (
                   <Th
                     key={column}
@@ -38,7 +38,7 @@ const CenterTable = ({ tableData }: Props) => {
             {tableData.map((row, index) => {
               return (
                 <Tr key={index}>
-                  {columns.map((column, index) => {
+                  {columnNames.map((column, index) => {
                     let value = row[column];
                     let textAlign: ResponsiveValue<any> = "start";
 
@@ -94,4 +94,4 @@ const CenterTable = ({ tableData }: Props) => {
 }
 
 
-export default memo(CenterTable);
+export default CenterTable;

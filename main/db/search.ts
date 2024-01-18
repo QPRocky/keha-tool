@@ -1,15 +1,20 @@
 import doSearch from "./doSearch";
-import DynamicDatabaseData from "../../interfaces/DynamicDatabaseData";
+import SearchResult from "../../interfaces/SearchResult";
 import getAllDataFromTables from "./getAllDataFromTables";
+import getForeignKeyDetails from "./getForeignKeyDetails";
 import getTableNames from "./getTableNames";
 
-const search = async (searchTerm: string): Promise<DynamicDatabaseData> => {
+const search = async (searchTerm: string): Promise<SearchResult> => {
   try {
     const tableNames = await getTableNames()
+    const foreignKeyDetails = await getForeignKeyDetails()
     const allTablesData = await getAllDataFromTables(tableNames)
-    const searchResult = await doSearch(searchTerm, allTablesData)
+    const data = await doSearch(searchTerm, allTablesData)
 
-    return searchResult
+    return {
+      foreignKeyDetails,
+      data
+    }
   } catch (error) {
     console.error('Error in search:', error);
     throw error;

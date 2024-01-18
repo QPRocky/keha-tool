@@ -27,7 +27,7 @@ interface Props {
 }
 
 const ConnectionModal = ({ editConnectionItem, isOpen, onClose }: Props) => {
-  const saveConnection = useDbConnectionsStore((s) => s.saveConnection)
+  const saveConnection = useDbConnectionsStore(s => s.saveConnection)
   const [connectionType, setConnectionType] = useState<ConnectionType>('mssql')
   const [server, setServer] = useState("")
   const [port, setPort] = useState(getPort("mssql"))
