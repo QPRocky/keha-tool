@@ -1,10 +1,8 @@
 interface ForeignKeyDetails {
-  parentTableSchema: string;
-  parentTable: string;
+  parentTableName: string;
   parentColumn: string;
-  referencedTableSchema: string;
-  referencedTable: string;
-  referencedColumn: string;
+  referenceTableName: string;
+  referenceColumn: string;
 }
 
 export default ForeignKeyDetails

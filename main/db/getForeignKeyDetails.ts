@@ -7,12 +7,10 @@ const getForeignKeyDetails = async (): Promise<ForeignKeyDetails[]> => {
 
     const results = await db.raw<ForeignKeyDetails[]>(`
       SELECT 
-        ts.name AS parentTableSchema,
-        tp.name AS parentTable,
+        CONCAT(ts.name, '.', tp.name) AS parentTableName,
         cp.name AS parentColumn,
-        trs.name AS referencedTableSchema,
-        tr.name AS referencedTable,
-        cr.name AS referencedColumn
+        CONCAT(trs.name, '.', tr.name) AS referenceTableName,
+        cr.name AS referenceColumn
       FROM 
         sys.foreign_keys AS fk
       INNER JOIN 

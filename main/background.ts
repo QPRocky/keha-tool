@@ -6,6 +6,8 @@ import search from './db/search'
 import track from './db/track'
 import Connection from '../interfaces/Connection'
 import { connect, disconnect, testConnection } from './db/db'
+import GetTablesRequest from '../interfaces/GetTablesRequest'
+import searchSpecificTables from './db/searchSpecificTables'
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -39,7 +41,7 @@ app.on('window-all-closed', () => {
   app.quit()
 })
 
-ipcMain.on('search', async (event, arg) => {
+ipcMain.on('search', async (event, arg: string) => {
   const searchResult = await search(arg);
   event.reply('search', searchResult)
 })
@@ -62,4 +64,9 @@ ipcMain.on('disconnect', async (event, arg) => {
 ipcMain.on('testConnection', async (event, arg) => {
   const error = await testConnection(arg as Connection);
   event.reply('testConnection', error)
+})
+
+ipcMain.on('getTables', async (event, arg: GetTablesRequest) => {
+  const dbData = await searchSpecificTables(arg)
+  event.reply('getTables', dbData)
 })
