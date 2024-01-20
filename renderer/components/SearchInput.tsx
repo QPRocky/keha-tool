@@ -11,6 +11,7 @@ const SearchInput = () => {
   const setDbData = useDbDataStore((s) => s.setDbData)
   const setForeignKeyDetails = useDbDataStore((s) => s.setForeignKeyDetails)
   const setSelectedTable = useDbDataStore((s) => s.setSelectedTable)
+  const selectedTable = useDbDataStore((s) => s.selectedTable)
 
   useEffect(() => {
     const removeTrackListener = window.ipc.on('search', args => {
@@ -18,14 +19,29 @@ const SearchInput = () => {
 
       setDbData(data)
       setForeignKeyDetails(foreignKeyDetails)
-      setSelectedTable(Object.keys(data)[0], true)
+
+
+      const tables = Object.keys(data)
+
+      if (tables.length > 0) {
+        if (selectedTable) {
+          if (tables.includes(selectedTable)) {
+            setSelectedTable(selectedTable)
+          } else {
+            setSelectedTable(tables[0])
+          }
+        } else {
+          setSelectedTable(tables[0])
+        }
+      }
+
       setIsLoading(false)
     });
 
     return () => {
       removeTrackListener();
     };
-  }, [])
+  }, [selectedTable])
 
   const search = useCallback((seachValue: string) => {
     if (!seachValue) return

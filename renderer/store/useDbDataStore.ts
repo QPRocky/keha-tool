@@ -13,7 +13,7 @@ interface State {
   referenceKeysBySelectedTable: ForeignKeyDetails[]
   setDbData: (dbData: DynamicDatabaseData) => void
   setForeignKeyDetails: (foreignKeyDetails: ForeignKeyDetails[]) => void
-  setSelectedTable: (selectedTable: string, useCurrentTable?: boolean) => void
+  setSelectedTable: (selectedTable: string) => void
 }
 
 const useDbDataStore = create<State>()(set => ({
@@ -35,16 +35,11 @@ const useDbDataStore = create<State>()(set => ({
     foreignKeyDetails
   }),
 
-  setSelectedTable: (selectedTable: string, useCurrentTable?: boolean) => set(state => {
+  setSelectedTable: (selectedTable: string) => set(state => {
     const tableData = Object.keys(state.dbData)
       .filter(s => s === selectedTable)
       .map(s => state.dbData[s])
       .flat()
-
-    if (useCurrentTable && state.selectedTable) {
-      const current = state.selectedTable
-      console.log(current);
-    }
 
     const parentKeysBySelectedTable = state.foreignKeyDetails
       .filter(f => f.parentTableName === selectedTable)
