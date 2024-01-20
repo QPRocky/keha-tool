@@ -7,14 +7,18 @@ import {
   ModalOverlay
 } from '@chakra-ui/react';
 import JsonFormatter from './JsonFormatter';
+import useDbDataStore from '../store/useDbDataStore';
 
 interface Props {
-  jsonString: string
   isOpen: boolean
   onClose: () => void
 }
 
-const JsonModal = ({ jsonString, isOpen, onClose }: Props) => {
+const JsonModal = ({ isOpen, onClose }: Props) => {
+  const jsonString = useDbDataStore(s => s.jsonString)
+
+  if (jsonString === "") return null
+
   const json = JSON.stringify(JSON.parse(jsonString), null, 2);
 
   return (

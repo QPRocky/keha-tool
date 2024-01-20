@@ -11,9 +11,11 @@ interface State {
   foreignKeyDetails: ForeignKeyDetails[]
   parentKeysBySelectedTable: ForeignKeyDetails[]
   referenceKeysBySelectedTable: ForeignKeyDetails[]
+  jsonString: string
   setDbData: (dbData: DynamicDatabaseData) => void
   setForeignKeyDetails: (foreignKeyDetails: ForeignKeyDetails[]) => void
   setSelectedTable: (selectedTable: string) => void
+  setJsonString: (jsonString: string) => void
 }
 
 const useDbDataStore = create<State>()(set => ({
@@ -25,6 +27,7 @@ const useDbDataStore = create<State>()(set => ({
   foreignKeyDetails: [],
   parentKeysBySelectedTable: [],
   referenceKeysBySelectedTable: [],
+  jsonString: "",
 
   setDbData: (dbData: DynamicDatabaseData) => set({
     dbData,
@@ -55,6 +58,10 @@ const useDbDataStore = create<State>()(set => ({
       referenceKeysBySelectedTable
     }
   }),
+
+  setJsonString: (jsonString: string) => set({
+    jsonString
+  })
 
 }));
 
