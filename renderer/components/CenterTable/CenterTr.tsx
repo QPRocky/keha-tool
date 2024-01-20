@@ -1,16 +1,17 @@
 import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, ResponsiveValue, useDisclosure } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { format, set } from 'date-fns';
-import isBufferObject from "../utils/isBufferObject";
-import convertBufferObjectToHexString from "../utils/convertBufferObjectToHexString";
-import isJson from "../utils/isJson";
-import JsonModal from "./JsonModal";
-import useDbDataStore from "../store/useDbDataStore";
-import GetTablesRequest from "../../interfaces/GetTablesRequest";
-import SearchResult from "../../interfaces/SearchResult";
-import DynamicDatabaseData from "../../interfaces/DynamicDatabaseData";
+import isBufferObject from "../../utils/isBufferObject";
+import convertBufferObjectToHexString from "../../utils/convertBufferObjectToHexString";
+import isJson from "../../utils/isJson";
+import JsonModal from "../JsonModal";
+import useDbDataStore from "../../store/useDbDataStore";
+import GetTablesRequest from "../../../interfaces/GetTablesRequest";
+import SearchResult from "../../../interfaces/SearchResult";
+import DynamicDatabaseData from "../../../interfaces/DynamicDatabaseData";
+import CenterTd from "./CenterTd";
 
-const CenterTable = () => {
+const CenterTr = () => {
   const [jsonString, setJsonString] = useState("")
   const { isOpen, onOpen, onClose } = useDisclosure()
   const columnNames = useDbDataStore(s => s.columnNames)
@@ -91,54 +92,11 @@ const CenterTable = () => {
                     if (value === null) showPointer = false
 
                     return (
-                      <Td
+                      <CenterTd
                         key={index}
-                        _hover={{ textDecoration: isJsonString ? "underline" : undefined }}
-                        cursor={showPointer ? "pointer" : undefined}
-                        onClick={() => {
-                          if (isJsonString) {
-                            setJsonString(value)
-                            onOpen()
-                          }
-
-                          if (parentKey && value) {
-                            const { referenceTableName, referenceColumn } = parentKey
-
-                            const req: GetTablesRequest = {
-                              searchDetails: [
-                                {
-                                  tableName: referenceTableName,
-                                  column: referenceColumn
-                                }
-                              ],
-                              value,
-                              getOnlyParent: true
-                            }
-
-                            window.ipc.send('getTables', req)
-                          }
-
-                          if (referenceKeys.length > 0 && value) {
-                            const req: GetTablesRequest = {
-                              searchDetails: referenceKeys.map((referenceKey) => {
-                                const { parentTableName, parentColumn } = referenceKey
-                                return {
-                                  tableName: parentTableName,
-                                  column: parentColumn
-                                }
-                              }),
-                              value,
-                              getOnlyParent: false
-                            }
-
-                            window.ipc.send('getTables', req)
-                          }
-
-                        }}
-                        color={textColor}
-                        textAlign={textAlign}>
-                        {value === null ? "null" : value}
-                      </Td>
+                        column={column}
+                        value={value}
+                      />
                     )
                   })}
                 </Tr>
@@ -147,18 +105,8 @@ const CenterTable = () => {
           </Tbody>
         </Table>
       </TableContainer >
-
-      {
-        jsonString &&
-        <JsonModal
-          jsonString={jsonString}
-          isOpen={isOpen}
-          onClose={onClose}
-        />
-      }
     </>
   )
 }
 
-
-export default CenterTable;
+export default CenterTr;

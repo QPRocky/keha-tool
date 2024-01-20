@@ -3,7 +3,7 @@ import { Box, Button, Divider, Flex } from '@chakra-ui/react';
 import { Resplit } from 'react-resplit';
 import { NextPage } from 'next';
 import DynamicDatabaseData from '../../interfaces/DynamicDatabaseData';
-import CenterTable from '../components/CenterTable';
+import CenterTableContainer from '../components/CenterTable/CenterTableContainer';
 import TablesList from '../components/TablesList';
 import Splitter from '../components/Splitter';
 import MainContainer from '../components/MainContainer';
@@ -105,7 +105,7 @@ const TrackPage: NextPage = () => {
           {
             selectedResultId != undefined &&
             <Flex h="100vh">
-              <CenterTable
+              <CenterTableContainer
                 tableData={results[selectedResultId][selectedTable]}
               />
             </Flex>

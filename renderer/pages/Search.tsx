@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react'
 import { NextPage } from 'next';
 import { Resplit } from 'react-resplit';
-import CenterTable from '../components/CenterTable';
+import CenterTableContainer from '../components/CenterTable/CenterTableContainer';
 import TablesList from '../components/TablesList';
 import Splitter from '../components/Splitter';
 import MainContainer from '../components/MainContainer';
@@ -24,7 +24,7 @@ const SearchPage: NextPage = () => {
         <Splitter />
         <Resplit.Pane order={2} initialSize="0.8fr">
           <Flex h="100vh">
-            <CenterTable />
+            <CenterTableContainer />
           </Flex>
         </Resplit.Pane>
       </Resplit.Root>
