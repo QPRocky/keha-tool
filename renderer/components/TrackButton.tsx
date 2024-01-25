@@ -1,23 +1,23 @@
-import { Input } from '@chakra-ui/react'
-import { useCallback, useEffect, useState } from 'react';
+import { Button } from '@chakra-ui/react'
+import { useState, useCallback, useEffect } from 'react';
 import useConnectionStatusStore from '../store/useConnectionStatusStore';
-import SearchResult from '../../interfaces/SearchResult';
 import useDbDataStore from '../store/useDbDataStore';
+import SearchResult from '../../interfaces/SearchResult';
 
-const SearchInput = () => {
-  const connectionStatus = useConnectionStatusStore(s => s.connectionStatus)
-  const [seachValue, setSeachValue] = useState('')
+const TrackButton = () => {
+  const [isStart, setIsStart] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
-  const setDbData = useDbDataStore((s) => s.setDbData)
-  const setForeignKeyDetails = useDbDataStore((s) => s.setForeignKeyDetails)
+  const connectionStatus = useConnectionStatusStore(s => s.connectionStatus)
+  const setDbData = useDbDataStore(s => s.setDbData)
+  const setForeignKeyDetails = useDbDataStore(s => s.setForeignKeyDetails)
   const setSelectedTable = useDbDataStore((s) => s.setSelectedTable)
   const selectedTable = useDbDataStore((s) => s.selectedTable)
 
   useEffect(() => {
-    const removeTrackListener = window.ipc.on('search', args => {
+    const removeTrackListener = window.ipc.on('track', args => {
       const { foreignKeyDetails, data } = args as SearchResult
 
-      setDbData(data)
+      setDbData(isStart ? {} : data)
       setForeignKeyDetails(foreignKeyDetails)
 
       const tables = Object.keys(data)
@@ -34,34 +34,31 @@ const SearchInput = () => {
         }
       }
 
+      setIsStart(!isStart)
       setIsLoading(false)
     });
 
     return () => {
       removeTrackListener();
     };
-  }, [selectedTable])
+  }, [isStart])
 
-  const search = useCallback((seachValue: string) => {
-    if (!seachValue) return
+  const trackClick = useCallback(() => {
     setIsLoading(true)
-    window.ipc.send('search', seachValue)
+
+    window.ipc.send('track', isStart)
   }, [isLoading]);
 
   return (
-    <Input
+    <Button
       isDisabled={connectionStatus === 'disconnected'}
       w="full"
-      value={seachValue}
-      onChange={e => setSeachValue(e.target.value)}
-      onKeyDown={e => {
-        if (e.key === 'Enter') {
-          if (isLoading) return
-          search(seachValue);
-        }
-      }}
-    />
+      onClick={trackClick}
+      isLoading={isLoading}
+    >
+      {isStart ? 'Start' : 'Stop'}
+    </Button>
   )
 }
 
-export default SearchInput
+export default TrackButton

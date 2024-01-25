@@ -1,4 +1,4 @@
-import { Table, Thead, Tbody, Tr, Th, TableContainer, useDisclosure } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, TableContainer, useDisclosure, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 import JsonModal from "../JsonModal";
 import useDbDataStore from "../../store/useDbDataStore";
@@ -11,11 +11,23 @@ const CenterTable = () => {
   const tableData = useDbDataStore(s => s.tableData)
   const setDbData = useDbDataStore((s) => s.setDbData)
   const setSelectedTable = useDbDataStore(s => s.setSelectedTable)
+  const toast = useToast()
 
   useEffect(() => {
     const removeTrackListener = window.ipc.on('getTables', (args: DynamicDatabaseData) => {
-      setDbData(args)
-      setSelectedTable(Object.keys(args)[0])
+
+      if (Object.keys(args).length > 0) {
+        setDbData(args)
+        setSelectedTable(Object.keys(args)[0])
+      } else {
+        toast({
+          title: "No foreign objects found",
+          description: "No foreign objects found",
+          status: "error",
+          duration: 3000,
+          isClosable: true
+        })
+      }
     });
 
     return () => {

@@ -46,9 +46,9 @@ ipcMain.on('search', async (event, arg: string) => {
   event.reply('search', searchResult)
 })
 
-ipcMain.on('track', async (event, arg) => {
-  const allTablesData = await track();
-  event.reply('track', allTablesData)
+ipcMain.on('track', async (event, arg: boolean) => {
+  const searchResult = await track(arg);
+  event.reply('track', searchResult)
 })
 
 ipcMain.on('connect', async (event, arg) => {

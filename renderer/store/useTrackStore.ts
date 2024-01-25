@@ -2,17 +2,27 @@ import { create } from 'zustand';
 import DynamicDatabaseData from '../../interfaces/DynamicDatabaseData';
 
 interface State {
-  results: DynamicDatabaseData[]
+  dbData: DynamicDatabaseData | undefined
+  tableNames: string[]
+  setDbData: (dbData: DynamicDatabaseData) => void
+  /*results: DynamicDatabaseData[]
   selectedResultId?: number
   selectedTable: string
   setResult: (result: DynamicDatabaseData) => void
   setSelectedResultId: (selectedResultId: number) => void
   setSelectedTable: (selectedTable: string) => void
-  clearResults: () => void
+  clearResults: () => void*/
 }
 
 const useTrackStore = create<State>()(set => ({
-  results: [],
+  dbData: undefined,
+  tableNames: [],
+
+  setDbData: (dbData: DynamicDatabaseData) => set({
+    dbData,
+    tableNames: Object.keys(dbData)
+  }),
+  /*results: [],
   selectedResultId: undefined,
   selectedTable: "",
 
@@ -34,7 +44,7 @@ const useTrackStore = create<State>()(set => ({
   clearResults: () => set({
     results: [],
     selectedResultId: undefined
-  }),
+  }),*/
 
 }));
 
