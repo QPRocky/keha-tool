@@ -70,6 +70,8 @@ const CenterTd = ({ column, value, onOpen }: Props) => {
 
   return (
     <Td
+      maxW={"300px"}
+      overflow="hidden"
       cursor={getCursor(parentKeyDetailsExists, referenceKeysDetailsExists, isJsonString, value)}
       onClick={onClick}
       color={getTextColor(parentKeyDetailsExists, referenceKeysDetailsExists, value, isJsonString)}

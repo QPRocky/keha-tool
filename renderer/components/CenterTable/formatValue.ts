@@ -13,6 +13,10 @@ const formatValue = (value: any) => {
     value = "null";
   }
 
+  if (value.length > 150) {
+    value = value.substring(0, 150);
+  }
+
   return value
 }
 
